@@ -115,9 +115,9 @@ $(document).ready(function(){
         ct.refresh(status.currentTemp);
         h.refresh(parseInt(status.currentHumid));
         if(status.burning == 1){
-          $("#controller-bg").addClass('burning');
+          $("#logo").attr("src","/public/burninglogo.gif");
         }else{
-          $("#controller-bg").removeClass('burning');
+          $("#logo").attr("src","/public/logo.png");
         }
       }
       setTimeout( updateStatus, 1000 ); // <-- when you ge a response, call it
