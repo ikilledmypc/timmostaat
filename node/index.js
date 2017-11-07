@@ -24,11 +24,11 @@ var status = {currentTemp:20,wantedTemp:22,currentHumid:35,burning:1};
 var settings = JSON.parse(fs.readFileSync(__dirname + '/public/settings.json'));
 
 //setup automatic night and day temperature change using cron at 6AM and 11PM
-var dayTimeCron = schedule.scheduleJob('00 6 * * *', function(){
+var dayTimeCron = schedule.scheduleJob({hour: settings.dayHour}, function(){
   updateWantedTemp(settings.daytemp);
 });
 
-var nightTimeCron = schedule.scheduleJob('00 23 * * *', function(){
+var nightTimeCron = schedule.scheduleJob({hour: settings.nightHour}, function(){
   updateWantedTemp(settings.nighttemp);
 });
 
