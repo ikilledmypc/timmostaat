@@ -1,7 +1,34 @@
 const express = require('express');
 const app = express();
 var fs = require("fs");
+
+var elasticsearch = require('elasticsearch');
+var client = new elasticsearch.Client({
+  host: 'localhost:9200',
+  log: 'info'
+});
+
+client.ping({
+  requestTimeout: 30000,
+}, function (error) {
+  if (error) {
+    console.error('elastic: elasticsearch cluster is down!');
+  } else {
+    console.log('elastic: All is well');
+  }
+});
+
+
+
+var bodyParser = require('body-parser')
+app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+}));
+app.use('/public', express.static(__dirname + '/public'))
+
 var schedule = require('node-schedule');
+
 const SerialPort = require('serialport');
 const Readline = SerialPort.parsers.Readline;
 var port = new SerialPort('/dev/ttyUSB0',{
@@ -9,12 +36,7 @@ var port = new SerialPort('/dev/ttyUSB0',{
 });
 const parser = new Readline();
 port.pipe(parser);
-var bodyParser = require('body-parser')
-app.use( bodyParser.json() );       // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
-  extended: true
-}));
-app.use('/public', express.static(__dirname + '/public'))
+
 
 
 //some default status values
@@ -90,4 +112,22 @@ function isEmpty(obj) {
 function updateStatus(data){
   var dataArray = data.split(":");
   status = {currentTemp : dataArray[0], currentHumid : dataArray[1], wantedTemp : dataArray[2], burning : dataArray[3]};
+  logStatus();
+}
+
+//push current status to elasticsearch
+function logStatus(){
+  client.index({
+    index: 'temp-status',
+    type: 'temp-statustype',
+    body: {
+      wantedTemp: status.wantedTemp,
+      currentTemp: status.currentTemp,
+      currentHumid: status.currentHumid,
+      burning: status.burning,
+      date: Math.floor(Date.now())
+    }
+  }, function (error, response) {
+
+  });
 }

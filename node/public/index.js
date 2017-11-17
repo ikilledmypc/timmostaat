@@ -63,8 +63,8 @@ $(document).ready(function(){
     var settings = res;
     $("#night-temp").html(settings["nighttemp"] + "°C");
     $("#day-temp").html(settings["daytemp"] + "°C");
-    $("#night-hour").html("after " + settings["nightHour"] + ":00 temperature will be set to:")
-    $("#day-hour").html("after " + settings["dayHour"] + ":00 temperature will be set to:")
+    $("#night-hour").html("After " + settings["nightHour"] + ":00 temperature will be set to:")
+    $("#night-hour").html("After " + settings["dayHour"] + ":00 temperature will be set to:")
   });
 
 

@@ -1,0 +1,25 @@
+PUT temp-status
+{
+  "mappings": {
+    "temp-statustype": {
+      "properties": {
+        "date": {
+          "type":   "date",
+          "format": "epoch_millis"
+        },
+        "wantedTemp": {
+          "type": "integer"
+        },
+        "currentTemp": {
+          "type": "integer"
+        },
+        "currentHumid":{
+          "type": "integer"
+        },
+        "burning":{
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}
